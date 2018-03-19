@@ -10,7 +10,10 @@ export class ItemService {
 
   constructor(public afs: AngularFirestore) {
     // this.items = this.afs.collection('tasks').valueChanges();
-    this.items = this.afs.collection('tasks').snapshotChanges().map(changes => {
+
+    this.itemsCollection = this.afs.collection('tasks', ref=> ref.orderBy('title', 'asc'));
+
+    this.items = this.itemsCollection.snapshotChanges().map(changes => {
       return changes.map(a => {
         const data = a.payload.doc.data() as Item;
         data.id = a.payload.doc.id;
@@ -23,4 +26,7 @@ export class ItemService {
     return this.items;
   }
 
+  addItem(item: Item){
+    this.itemsCollection.add(item);
+  }
 }
