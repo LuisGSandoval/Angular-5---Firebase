@@ -6,7 +6,8 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class ItemService {
   itemsCollection : AngularFirestoreCollection<Item>;
-  items: Observable<Item[]>
+  items: Observable<Item[]>;
+  itemDoc: AngularFirestoreDocument<Item>;
 
   constructor(public afs: AngularFirestore) {
     // this.items = this.afs.collection('tasks').valueChanges();
@@ -28,5 +29,10 @@ export class ItemService {
 
   addItem(item: Item){
     this.itemsCollection.add(item);
+  }
+
+  deleteItem(item: Item){
+    this.itemDoc = this.afs.doc(`tasks/${item.id}`);
+    this.itemDoc.delete();
   }
 }
